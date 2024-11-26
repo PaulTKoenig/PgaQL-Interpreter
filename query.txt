@@ -1,0 +1,11 @@
+// Query
+//  ├── SelectClause
+//  │    ├── Column(name)
+//  │    └── Column(age)
+//  ├── FromClause
+//  │    └── Table(users)
+//  └── WhereClause
+//       └── Condition
+//            ├── Column(age)
+//            └── Operator(>)
+//            └── Value(30)
