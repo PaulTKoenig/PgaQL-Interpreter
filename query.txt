@@ -53,8 +53,6 @@ WHITESPACE    : [ \t\r\n]+ -> skip;
 
 FIND golfers WHERE score < 0 AND round = 1 AND tournament = "PGA Championship"
 
-ANALYZE holes WHERE hole = 12 AND course = "Augusta National"
-
-CALCULATE strokes_gained WHERE golfer = "Tiger Woods" AND year = 2023
-
 PLOT driving_distance VS score WHERE tournament = "US Open"
+
+PLOT driving_distance_per_par_5 VS score WHERE tournament = "US Open" and driving_distance_per_par_5 defined as (FIND driving_distance_average WHERE par = 5 AND tournament = "US Open")
