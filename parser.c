@@ -25,27 +25,6 @@ AST* parse(TOKEN_NODE *token_node) {
     TOKEN *token = NULL;
 
     // lexer_next_token(&token_node, &token);
-    // if (!expected_token_type(token->type, FIND)) {
-    //     return NULL;
-    // }
-    // printf("Token type here: %s\n", type_to_string(token->type));
-    // FIND_IDENTIFIER_NODE find_identifier_node;
-    // find_identifier_node.search_type_token = token;
-    
-    // lexer_next_token(&token_node, &token);
-    // if (!expected_token_type(token->type, SEARCH_LIMIT_TOKEN)) {
-    //     return NULL;
-    // }
-    // find_identifier_node.limit_type_token = token;
-
-    // lexer_next_token(&token_node, &token);
-    // if (!expected_token_type(token->type, player)) {
-    //     return NULL;
-    // }
-    // find_identifier_node.search_category_token = token;
-    // ast->find_identifier = find_identifier_node;
-
-    // lexer_next_token(&token_node, &token);
     // if (!expected_token_type(token->type, WHERE)) {
     //     return NULL;
     // }
@@ -84,6 +63,30 @@ AST* parse(TOKEN_NODE *token_node) {
         return NULL;
     }
     chart_identifier_node.chart_type_token = token;
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, FOR)) {
+        return NULL;
+    }
+
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
+        return NULL;
+    }
+    chart_identifier_node.x_axis_token = token;
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, VS)) {
+        return NULL;
+    }
+
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
+        return NULL;
+    }
+    chart_identifier_node.y_axis_token = token;
     ast->chart_identifier = chart_identifier_node;
 
     return ast;
@@ -92,8 +95,8 @@ AST* parse(TOKEN_NODE *token_node) {
 void print_ast(AST *ast) {
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.charted_token->type));
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.chart_type_token->type));
-    // printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.x_axis_token->type));
-    // printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.y_axis_token->type));
+    printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.x_axis_token->type));
+    printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.y_axis_token->type));
     // printf("Token type in AST: %s\n", type_to_string(ast->where_identifier_list->where_identifier.where_condition_token->type));
     printf("\n");
 }
@@ -104,8 +107,8 @@ void free_ast(AST *ast) {
 
     free(chart_node.charted_token);
     free(chart_node.chart_type_token);
-    // free(chart_node.x_axis_token);
-    // free(chart_node.y_axis_token);
+    free(chart_node.x_axis_token);
+    free(chart_node.y_axis_token);
 
 
    //  WHERE_IDENTIFIER_NODE *where_node_head = ast->where_identifier_list;

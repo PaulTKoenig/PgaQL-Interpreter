@@ -126,6 +126,8 @@ char* interpret(AST* ast) {
     convert_and_append_identifier_to_query(&sql_identifier_token_node, &find_token);
     append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
     append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.chart_type_token);
+    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.x_axis_token);
+    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.y_axis_token);
     // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node->where_identifier.where_condition_token);
     // convert_and_append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.limit_type_token);
 

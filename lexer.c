@@ -90,7 +90,7 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = IN;
     } else if (strncmp(input, "FOR", tokenLength) == 0) {
         token_ptr->type = FOR;
-    } else if (strncmp(input, "AXIS_TOKEN_TYPE", tokenLength) == 0) {
+    } else if (strncmp(input, "driving_distance", tokenLength) == 0 || strncmp(input, "score", tokenLength) == 0) {
         token_ptr->type = AXIS_TOKEN_TYPE;
     } else if (strncmp(input, "VS", tokenLength) == 0) {
         token_ptr->type = VS;
