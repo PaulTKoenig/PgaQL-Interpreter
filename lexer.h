@@ -1,23 +1,21 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+
 typedef enum {
+    CHART,
+    CHARTED_TOKEN_TYPE,
+    IN,
+    CHART_TYPE,
+    FOR,
+    AXIS_TOKEN_TYPE,
+    VS,
     FIND,
     SEARCH_LIMIT_TOKEN,
     player,
     WHERE,
     INVALID_TOKEN
 } TOKEN_TYPE;
-
-typedef enum {
-    FIRST,
-    LAST,
-    ALL,
-    number,
-    times,
-    plus,
-    invalid
-} TOKEN_CONTENT;
 
 typedef struct {
     TOKEN_TYPE type;

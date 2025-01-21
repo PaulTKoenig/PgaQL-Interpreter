@@ -65,6 +65,8 @@ char* convert_token_to_sql_identifier(TOKEN *token) {
         } else {
             return "";
         }
+    } else if (token->type == FIND) {
+        return "SELECT";
     } else {
         printf("Element is unknown: %s\n", type_to_string(token->type));
     }
@@ -116,13 +118,16 @@ char* interpret(AST* ast) {
     
     SQL_IDENTIFIER_TOKEN_NODE *sql_identifier_token_node = NULL;
 
-    FIND_IDENTIFIER_NODE find_identifier_node = ast->find_identifier;
-    WHERE_IDENTIFIER_NODE *where_identifier_node = ast->where_identifier_list;
+    CHART_IDENTIFIER_NODE chart_identifier_node = ast->chart_identifier;
+    // WHERE_IDENTIFIER_NODE *where_identifier_node = ast->where_identifier_list;
 
-    convert_and_append_identifier_to_query(&sql_identifier_token_node, find_identifier_node.search_type_token);
-    append_identifier_to_query(&sql_identifier_token_node, find_identifier_node.search_category_token);
-    append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
-    convert_and_append_identifier_to_query(&sql_identifier_token_node, find_identifier_node.limit_type_token);
+    TOKEN find_token = {FIND, "FIND", 4};
+
+    convert_and_append_identifier_to_query(&sql_identifier_token_node, &find_token);
+    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
+    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.chart_type_token);
+    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node->where_identifier.where_condition_token);
+    // convert_and_append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.limit_type_token);
 
     print_sql_token_list(sql_identifier_token_node);
 

@@ -4,6 +4,13 @@
 #include "lexer.h"
 
 typedef struct {
+    TOKEN *charted_token;
+    TOKEN *chart_type_token;
+    TOKEN *x_axis_token;
+    TOKEN *y_axis_token;
+} CHART_IDENTIFIER_NODE;
+
+typedef struct {
     TOKEN *search_type_token;
     TOKEN *limit_type_token;
     TOKEN *search_category_token;
@@ -19,6 +26,7 @@ typedef struct where_identifier_node {
 } WHERE_IDENTIFIER_NODE;
 
 typedef struct {
+    CHART_IDENTIFIER_NODE chart_identifier;
     FIND_IDENTIFIER_NODE find_identifier;
     WHERE_IDENTIFIER_NODE *where_identifier_list;
 } AST;

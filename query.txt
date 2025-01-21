@@ -53,6 +53,6 @@ WHITESPACE    : [ \t\r\n]+ -> skip;
 
 FIND golfers WHERE score < 0 AND round = 1 AND tournament = "PGA Championship"
 
-PLOT driving_distance VS score WHERE tournament = "US Open"
+CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament = "US Open"
 
-PLOT driving_distance_per_par_5 VS score WHERE tournament = "US Open" and driving_distance_per_par_5 defined as (FIND driving_distance_average WHERE par = 5 AND tournament = "US Open")
+CHART golfers IN box_plot FOR driving_distance_per_par_5 VS score WHERE tournament = "US Open" and driving_distance_per_par_5 defined as (FIND driving_distance_average WHERE par = 5 AND tournament = "US Open")

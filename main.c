@@ -8,9 +8,9 @@
 
 int main(void) {
 
-    char input[] = "FIND LAST player WHERE";
-    // char input[] = "FIND    player   WITH THE (MOST, LEAST.. TOTAL), (HIGHEST, LOWEST .. AVG) BIRDIES   ACROSS ROUNDS 1,2,4   IN THE MASTERS   WHERE   player IS european";
-    
+    char input[] = "CHART golfers IN scatter_plot"; // FOR driving_distance VS score WHERE tournament = Masters";
+    // "FIND LAST player WHERE"
+
     TOKEN_NODE *token_list_head = lex(input);
     print_token_list(token_list_head);
 
@@ -23,7 +23,7 @@ int main(void) {
 
     // CLEAN UP MEMORY
     free_token_list(token_list_head);
-    free_ast(ast);
+    free(ast);
     free(query_string);
 
     return 0;
