@@ -89,11 +89,13 @@ AST* parse(TOKEN_NODE *token_node) {
     chart_identifier_node.y_axis_token = token;
     ast->chart_identifier = chart_identifier_node;
 
-    printf("SHIT BROKE");
-
 
     WHERE_IDENTIFIER where_identifier;
-    printf("SHIT BROKE");
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, WHERE)) {
+        return NULL;
+    }
 
     lexer_next_token(&token_node, &token);
     if (!expected_token_type(token->type, WHERE_FIELD)) {
@@ -105,13 +107,12 @@ AST* parse(TOKEN_NODE *token_node) {
     if (!expected_token_type(token->type, EQUALS)) {
         return NULL;
     }
-    printf("SHIT BROKE");
 
     lexer_next_token(&token_node, &token);
     if (!expected_token_type(token->type, WHERE_VALUE)) {
         return NULL;
     }
-    printf("SHIT BROKE");
+
     where_identifier.where_condition_token = token;
 
     WHERE_IDENTIFIER_NODE *where_identifier_node = malloc(sizeof(WHERE_IDENTIFIER_NODE));

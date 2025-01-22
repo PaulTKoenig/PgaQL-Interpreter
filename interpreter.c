@@ -41,10 +41,26 @@ void append_identifier_to_query(SQL_IDENTIFIER_TOKEN_NODE** token_node, TOKEN* t
     // (*current_position)++;
 
     SQL_IDENTIFIER_TOKEN_NODE *new_token_node = malloc(sizeof(SQL_IDENTIFIER_TOKEN_NODE));
-    
+
     char *token_content = malloc(token->token_length * sizeof(char));
     strncpy(token_content, token->content, token->token_length);
     SQL_IDENTIFIER_TOKEN new_token = { token_content, token->token_length };
+    
+    new_token_node->current_token = new_token;
+    new_token_node->next_token = NULL;
+
+    
+    append_to_list(token_node, new_token_node);
+}
+
+void append_column_identifier_to_query(SQL_IDENTIFIER_TOKEN_NODE** token_node, TOKEN* token) {
+
+    SQL_IDENTIFIER_TOKEN_NODE *new_token_node = malloc(sizeof(SQL_IDENTIFIER_TOKEN_NODE));
+
+    char *token_content = malloc((token->token_length+1) * sizeof(char));
+    strncpy(token_content, token->content, token->token_length);
+    token_content[token->token_length] = ',';
+    SQL_IDENTIFIER_TOKEN new_token = { token_content, token->token_length+1 };
     
     new_token_node->current_token = new_token;
     new_token_node->next_token = NULL;
@@ -65,8 +81,8 @@ char* convert_token_to_sql_identifier(TOKEN *token) {
         } else {
             return "";
         }
-    } else if (token->type == FIND) {
-        return "SELECT";
+    } else if (token->type == EQUALS) {
+        return "=";
     } else {
         printf("Element is unknown: %s\n", type_to_string(token->type));
     }
@@ -121,15 +137,23 @@ char* interpret(AST* ast) {
     CHART_IDENTIFIER_NODE chart_identifier_node = ast->chart_identifier;
     WHERE_IDENTIFIER_NODE *where_identifier_node = ast->where_identifier_list;
 
-    TOKEN find_token = {FIND, "FIND", 4};
+    TOKEN select_token = {FIND, "SELECT", 6};
+    TOKEN from_token = {FIND, "FROM", 4};
+    TOKEN where_token = {FIND, "WHERE", 5};
     TOKEN equals_token = {EQUALS, "=", 1};
 
-    convert_and_append_identifier_to_query(&sql_identifier_token_node, &find_token);
-    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
-    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.chart_type_token);
-    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.x_axis_token);
+    append_identifier_to_query(&sql_identifier_token_node, &select_token);
+    append_column_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.x_axis_token);
     append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.y_axis_token);
 
+
+    append_identifier_to_query(&sql_identifier_token_node, &from_token);
+    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
+    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.chart_type_token);
+    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.x_axis_token);
+    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.y_axis_token);
+
+    append_identifier_to_query(&sql_identifier_token_node, &where_token);
     append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_field_token);
     convert_and_append_identifier_to_query(&sql_identifier_token_node, &equals_token);
     append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);

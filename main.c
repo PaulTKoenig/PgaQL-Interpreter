@@ -8,7 +8,7 @@
 
 int main(void) {
 
-    char input[] = "CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament EQUALS Masters";
+    char input[] = "CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament = Masters";
 
     TOKEN_NODE *token_list_head = lex(input);
 

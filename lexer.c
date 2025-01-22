@@ -95,7 +95,7 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = FIND;
     } else if (strncmp(input, "tournament", tokenLength) == 0) {
         token_ptr->type = WHERE_FIELD;
-    } else if (strncmp(input, "EQUALS", tokenLength) == 0) {
+    } else if (strncmp(input, "=", tokenLength) == 0) {
         token_ptr->type = EQUALS;
     } else if (strncmp(input, "Masters", tokenLength) == 0) {
         token_ptr->type = WHERE_VALUE;
