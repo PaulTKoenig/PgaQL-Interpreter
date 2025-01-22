@@ -89,6 +89,37 @@ AST* parse(TOKEN_NODE *token_node) {
     chart_identifier_node.y_axis_token = token;
     ast->chart_identifier = chart_identifier_node;
 
+    printf("SHIT BROKE");
+
+
+    WHERE_IDENTIFIER where_identifier;
+    printf("SHIT BROKE");
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, WHERE_FIELD)) {
+        return NULL;
+    }
+    where_identifier.where_field_token = token;
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, EQUALS)) {
+        return NULL;
+    }
+    printf("SHIT BROKE");
+
+    lexer_next_token(&token_node, &token);
+    if (!expected_token_type(token->type, WHERE_VALUE)) {
+        return NULL;
+    }
+    printf("SHIT BROKE");
+    where_identifier.where_condition_token = token;
+
+    WHERE_IDENTIFIER_NODE *where_identifier_node = malloc(sizeof(WHERE_IDENTIFIER_NODE));
+    where_identifier_node->where_identifier = where_identifier;
+    where_identifier_node->next_where_identifier = NULL;
+    
+    ast->where_identifier_list = where_identifier_node;
+
     return ast;
 }
 
@@ -97,7 +128,7 @@ void print_ast(AST *ast) {
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.chart_type_token->type));
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.x_axis_token->type));
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.y_axis_token->type));
-    // printf("Token type in AST: %s\n", type_to_string(ast->where_identifier_list->where_identifier.where_condition_token->type));
+    printf("Token type in AST: %s\n", type_to_string(ast->where_identifier_list->where_identifier.where_condition_token->type));
     printf("\n");
 }
 
@@ -111,16 +142,17 @@ void free_ast(AST *ast) {
     free(chart_node.y_axis_token);
 
 
-   //  WHERE_IDENTIFIER_NODE *where_node_head = ast->where_identifier_list;
-   //  WHERE_IDENTIFIER_NODE *tmp;
+    WHERE_IDENTIFIER_NODE *where_node_head = ast->where_identifier_list;
+    WHERE_IDENTIFIER_NODE *tmp;
 
-   // while (where_node_head != NULL)
-   //  {
-   //     tmp = where_node_head;
-   //     where_node_head = where_node_head->next_where_identifier;
-   //     free(tmp->where_identifier.where_condition_token);
-   //     free(tmp);
-   //  }
+   while (where_node_head != NULL)
+    {
+       tmp = where_node_head;
+       where_node_head = where_node_head->next_where_identifier;
+       free(tmp->where_identifier.where_field_token);
+       free(tmp->where_identifier.where_condition_token);
+       free(tmp);
+    }
     
     free(ast);
 }

@@ -33,6 +33,15 @@ void print_token(TOKEN token) {
         case CHART:
             printf("Token Type: SEARCH_LIMIT_TOKEN, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
+        case WHERE_FIELD:
+            printf("Token Type: WHERE_FIELD, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            break;
+        case EQUALS:
+            printf("Token Type: EQUALS, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            break;
+        case WHERE_VALUE:
+            printf("Token Type: WHERE_VALUE, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            break;
         case CHARTED_TOKEN_TYPE:
             printf("Token Type: CHARTED_TOKEN_TYPE, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
@@ -84,6 +93,12 @@ int set_token_type(TOKEN **token, char *input) {
 
     if (strncmp(input, "FIND", tokenLength) == 0) {
         token_ptr->type = FIND;
+    } else if (strncmp(input, "tournament", tokenLength) == 0) {
+        token_ptr->type = WHERE_FIELD;
+    } else if (strncmp(input, "EQUALS", tokenLength) == 0) {
+        token_ptr->type = EQUALS;
+    } else if (strncmp(input, "Masters", tokenLength) == 0) {
+        token_ptr->type = WHERE_VALUE;
     } else if (strncmp(input, "CHART", tokenLength) == 0) {
         token_ptr->type = CHART;
     } else if (strncmp(input, "IN", tokenLength) == 0) {
@@ -136,6 +151,9 @@ TOKEN_NODE* lex(char *input) {
 
 char* type_to_string(TOKEN_TYPE t) {
     switch(t) {
+        case WHERE_FIELD: return "WHERE_FIELD";
+        case EQUALS: return "EQUALS";
+        case WHERE_VALUE: return "WHERE_VALUE";
         case CHART: return "CHART";
         case CHARTED_TOKEN_TYPE: return "CHARTED_TOKEN_TYPE";
         case IN: return "IN";

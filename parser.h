@@ -17,6 +17,7 @@ typedef struct {
 } FIND_IDENTIFIER_NODE;
 
 typedef struct {
+    TOKEN *where_field_token;
     TOKEN *where_condition_token;
 } WHERE_IDENTIFIER;
 

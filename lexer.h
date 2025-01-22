@@ -3,6 +3,9 @@
 
 
 typedef enum {
+    WHERE_FIELD,
+    EQUALS,
+    WHERE_VALUE,
     CHART,
     CHARTED_TOKEN_TYPE,
     IN,

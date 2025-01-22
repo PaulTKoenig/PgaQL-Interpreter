@@ -8,10 +8,10 @@
 
 int main(void) {
 
-    char input[] = "CHART golfers IN scatter_plot FOR driving_distance VS score"; // WHERE tournament = Masters";
-    // "FIND LAST player WHERE"
+    char input[] = "CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament EQUALS Masters";
 
     TOKEN_NODE *token_list_head = lex(input);
+
     print_token_list(token_list_head);
 
     AST *ast = parse(token_list_head);
