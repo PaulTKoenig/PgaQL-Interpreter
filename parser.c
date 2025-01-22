@@ -11,13 +11,11 @@ void lexer_next_token(TOKEN_NODE **token_node, TOKEN **token) {
 
 bool expected_token_type(TOKEN_TYPE actualType, TOKEN_TYPE expectedType) {
     if (actualType != expectedType) {
-        printf("Error: Expected %s, got %s\n", expectedType, actualType);
+        printf("Error: Expected %d, got %d\n", expectedType, actualType);
         return false;
     }
     return true;
 }
-
-//CHART golfers IN scatter_plot
 
 AST* parse(TOKEN_NODE *token_node) {
 
@@ -69,7 +67,6 @@ AST* parse(TOKEN_NODE *token_node) {
         return NULL;
     }
 
-
     lexer_next_token(&token_node, &token);
     if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
         return NULL;
@@ -80,7 +77,6 @@ AST* parse(TOKEN_NODE *token_node) {
     if (!expected_token_type(token->type, VS)) {
         return NULL;
     }
-
 
     lexer_next_token(&token_node, &token);
     if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
@@ -120,7 +116,6 @@ AST* parse(TOKEN_NODE *token_node) {
     where_identifier_node->next_where_identifier = NULL;
     
     ast->where_identifier_list = where_identifier_node;
-
     return ast;
 }
 

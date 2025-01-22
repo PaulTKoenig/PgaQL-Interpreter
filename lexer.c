@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include "lexer.h"
 
 void append_token(TOKEN_NODE **list, TOKEN token) {
@@ -25,13 +26,12 @@ void append_token(TOKEN_NODE **list, TOKEN token) {
 
 void print_token(TOKEN token) {
 
-
     switch (token.type) {
         case FIND:
             printf("Token Type: FIND, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
         case CHART:
-            printf("Token Type: SEARCH_LIMIT_TOKEN, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            printf("Token Type: CHART, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
         case WHERE_FIELD:
             printf("Token Type: WHERE_FIELD, Content: %c, Length: %d\n", *(token.content), token.token_length);
@@ -66,6 +66,9 @@ void print_token(TOKEN token) {
         case WHERE:
             printf("Token Type: WHERE, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
+        case INVALID_TOKEN:
+            printf("Unknown Token Type, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            break;
         default:
             printf("Unknown Token Type, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
@@ -82,6 +85,14 @@ void print_token_list(TOKEN_NODE *head) {
     printf("\n");
 }
 
+bool compare_strings(const char* tokenIdentifier, const char* input, size_t inputLength) {
+    size_t tokenIdentifierLength = strlen(tokenIdentifier);
+    if (tokenIdentifierLength != inputLength) {
+        return false;
+    }
+    return strncmp(input, tokenIdentifier, inputLength) == 0;
+}
+
 int set_token_type(TOKEN **token, char *input) {
 
     size_t tokenLength = 0;
@@ -91,34 +102,34 @@ int set_token_type(TOKEN **token, char *input) {
 
     TOKEN *token_ptr = *token;
 
-    if (strncmp(input, "FIND", tokenLength) == 0) {
+    if (compare_strings("FIND", input, tokenLength)) {
         token_ptr->type = FIND;
-    } else if (strncmp(input, "tournament", tokenLength) == 0) {
+    } else if (compare_strings("tournament", input, tokenLength)) {
         token_ptr->type = WHERE_FIELD;
-    } else if (strncmp(input, "=", tokenLength) == 0) {
+    } else if (compare_strings("=", input, tokenLength)) {
         token_ptr->type = EQUALS;
-    } else if (strncmp(input, "Masters", tokenLength) == 0) {
+    } else if (compare_strings("Masters", input, tokenLength)) {
         token_ptr->type = WHERE_VALUE;
-    } else if (strncmp(input, "CHART", tokenLength) == 0) {
+    } else if (compare_strings("CHART", input, tokenLength)) {
         token_ptr->type = CHART;
-    } else if (strncmp(input, "IN", tokenLength) == 0) {
+    } else if (compare_strings("IN", input, tokenLength)) {
         token_ptr->type = IN;
-    } else if (strncmp(input, "FOR", tokenLength) == 0) {
+    } else if (compare_strings("FOR", input, tokenLength)) {
         token_ptr->type = FOR;
-    } else if (strncmp(input, "driving_distance", tokenLength) == 0 || strncmp(input, "score", tokenLength) == 0) {
+    } else if (compare_strings("driving_distance", input, tokenLength) || compare_strings("score", input, tokenLength)) {
         token_ptr->type = AXIS_TOKEN_TYPE;
-    } else if (strncmp(input, "VS", tokenLength) == 0) {
+    } else if (compare_strings("VS", input, tokenLength)) {
         token_ptr->type = VS;
-    } else if (strncmp(input, "golfers", tokenLength) == 0) {
+    } else if (compare_strings("golfers", input, tokenLength)) {
         token_ptr->type = CHARTED_TOKEN_TYPE;
-    } else if (strncmp(input, "scatter_plot", tokenLength) == 0) {
+    } else if (compare_strings("scatter_plot", input, tokenLength)) {
         token_ptr->type = CHART_TYPE;
-    } else if (strncmp(input, "player", tokenLength) == 0) {
+    } else if (compare_strings("player", input, tokenLength)) {
         token_ptr->type = player;
-    } else if (strncmp(input, "WHERE", tokenLength) == 0) {
+    } else if (compare_strings("WHERE", input, tokenLength)) {
         token_ptr->type = WHERE;
     } else {
-        printf("Element is unknown: %c\n", *input);
+        token_ptr->type = INVALID_TOKEN;
     }
     return tokenLength;
 }

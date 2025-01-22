@@ -15,6 +15,10 @@ int main(void) {
     print_token_list(token_list_head);
 
     AST *ast = parse(token_list_head);
+    if (ast == NULL) {
+        printf("Error: Invalid Syntax");
+        return 0;
+    }
     print_ast(ast);
 
     char *query_string = interpret(ast);
