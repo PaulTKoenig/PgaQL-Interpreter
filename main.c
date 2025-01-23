@@ -37,10 +37,7 @@ int main(void) {
         input[position++] = (char)ch;
     }
 
-    // Null-terminate the string
     input[position] = '\0';
-    // printf("You entered: %s\n", input);
-    // return 0;
 
 
 
@@ -64,6 +61,7 @@ int main(void) {
     free_token_list(token_list_head);
     free(ast);
     free(query_string);
+    free(input);
 
     return 0;
 }
