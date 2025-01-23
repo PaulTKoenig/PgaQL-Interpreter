@@ -104,7 +104,7 @@ void convert_and_append_identifier_to_query(SQL_IDENTIFIER_TOKEN_NODE** token_no
 char* build_query_string(SQL_IDENTIFIER_TOKEN_NODE *token_node) {
     size_t query_length = get_token_list_length(token_node);
 
-    char* query_string = malloc(query_length * sizeof(char));
+    char* query_string = malloc((query_length+1) * sizeof(char));
     size_t current_position = 0;
 
     while (token_node != NULL) {
@@ -118,6 +118,7 @@ char* build_query_string(SQL_IDENTIFIER_TOKEN_NODE *token_node) {
 
         token_node = token_node->next_token;
     }
+    query_string[query_length] = '\0'; // null-terminate
     return query_string;
 }
 
@@ -158,7 +159,7 @@ char* interpret(AST* ast) {
     convert_and_append_identifier_to_query(&sql_identifier_token_node, &equals_token);
     append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
 
-    print_sql_token_list(sql_identifier_token_node);
+    // print_sql_token_list(sql_identifier_token_node);
 
     char* query_string = build_query_string(sql_identifier_token_node);
 
