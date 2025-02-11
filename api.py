@@ -2,7 +2,7 @@ import subprocess
 
 
 
-message = "CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament = Masters"
+message = "CHART players IN scatter_plot FOR min VS fgm WHERE tournament = Masters"
 
 process = subprocess.Popen(
     ['./main'],  # Path to C executable

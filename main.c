@@ -9,7 +9,7 @@
 
 int main(void) {
 
-    // char input[] = "CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament = Masters";
+    // char input[] = "CHART players IN scatter_plot FOR driving_distance VS score WHERE tournament = Masters";
 
     char *input = malloc(CHUNK_SIZE * sizeof(char));  // Start with an initial buffer
     if (input == NULL) {

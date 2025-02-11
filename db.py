@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS box_score (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     game_id TEXT NOT NULL,
     team_id TEXT NOT NULL,
-    team_abbreviation TEXT NOT NULL,
+    team_abbr TEXT NOT NULL,
     team_city TEXT NOT NULL,
     player_id TEXT NOT NULL,
     player_name TEXT NOT NULL,
@@ -48,7 +48,7 @@ with open(csv_file, mode='r') as file:
     csv_reader = csv.DictReader(file)
     for row in csv_reader:
         cursor.execute('''
-        INSERT INTO box_score (game_id, team_id, team_abbreviation, team_city, player_id, player_name,
+        INSERT INTO box_score (game_id, team_id, team_abbr, team_city, player_id, player_name,
                                nickname, start_position, comment, min, fgm, fga, fg_pct, three_pm, three_pa, three_pct, 
                                ftm, fta, ft_pct, o_reb, d_reb, reb, ast, stl, blk, turnover, pf, pts, plus_minus)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

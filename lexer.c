@@ -5,6 +5,16 @@
 #include <stdbool.h>
 #include "lexer.h"
 
+
+const char *SEARCHABLE_FIELDS[] = {
+    "team_abbr", "team_city", "player_name", "start_position",
+    "min", "fgm", "fga", "fg_pct", "three_pm", "three_pa", "three_pct",
+    "ftm", "fta", "ft_pct", "o_reb", "d_reb", "reb", "ast", "stl",
+    "blk", "turnover", "pf", "pts", "plus_minus"
+};
+const int SEARCHABLE_FIELDS_SIZE = sizeof(SEARCHABLE_FIELDS) / sizeof(SEARCHABLE_FIELDS[0]); 
+
+
 void append_token(TOKEN_NODE **list, TOKEN token) {
 
     TOKEN_NODE *newToken = malloc(sizeof(TOKEN_NODE));
@@ -85,7 +95,7 @@ void print_token_list(TOKEN_NODE *head) {
     printf("\n");
 }
 
-bool compare_strings(const char* tokenIdentifier, const char* input, size_t inputLength) {
+bool compare_strings(const char* tokenIdentifier, const char* input, const size_t inputLength) {
     size_t tokenIdentifierLength = strlen(tokenIdentifier);
     if (tokenIdentifierLength != inputLength) {
         return false;
@@ -93,6 +103,14 @@ bool compare_strings(const char* tokenIdentifier, const char* input, size_t inpu
     return strncmp(input, tokenIdentifier, inputLength) == 0;
 }
 
+bool exists_in_set(const char *set[], int set_size, const char *input, const size_t inputLength) {
+    for (int i = 0; i < set_size; i++) {
+        if (compare_strings(set[i], input, inputLength)) {
+            return true;
+        }
+    }
+    return false;
+}
 int set_token_type(TOKEN **token, char *input) {
 
     size_t tokenLength = 0;
@@ -116,11 +134,11 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = IN;
     } else if (compare_strings("FOR", input, tokenLength)) {
         token_ptr->type = FOR;
-    } else if (compare_strings("driving_distance", input, tokenLength) || compare_strings("score", input, tokenLength)) {
+    } else if (exists_in_set(SEARCHABLE_FIELDS, SEARCHABLE_FIELDS_SIZE, input, tokenLength)) {
         token_ptr->type = AXIS_TOKEN_TYPE;
     } else if (compare_strings("VS", input, tokenLength)) {
         token_ptr->type = VS;
-    } else if (compare_strings("golfers", input, tokenLength)) {
+    } else if (compare_strings("players", input, tokenLength)) {
         token_ptr->type = CHARTED_TOKEN_TYPE;
     } else if (compare_strings("scatter_plot", input, tokenLength)) {
         token_ptr->type = CHART_TYPE;
