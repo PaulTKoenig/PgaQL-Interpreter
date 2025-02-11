@@ -126,8 +126,6 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = WHERE_FIELD;
     } else if (compare_strings("=", input, tokenLength)) {
         token_ptr->type = EQUALS;
-    } else if (compare_strings("Masters", input, tokenLength)) {
-        token_ptr->type = WHERE_VALUE;
     } else if (compare_strings("CHART", input, tokenLength)) {
         token_ptr->type = CHART;
     } else if (compare_strings("IN", input, tokenLength)) {
@@ -147,7 +145,7 @@ int set_token_type(TOKEN **token, char *input) {
     } else if (compare_strings("WHERE", input, tokenLength)) {
         token_ptr->type = WHERE;
     } else {
-        token_ptr->type = INVALID_TOKEN;
+        token_ptr->type = WHERE_VALUE;
     }
     return tokenLength;
 }
