@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS box_score (
     nickname TEXT NOT NULL,
     start_position TEXT,
     comment TEXT,
-    min REAL,
+    mins REAL,
     fgm REAL,
     fga REAL,
     fg_pct REAL,
@@ -49,7 +49,7 @@ with open(csv_file, mode='r') as file:
     for row in csv_reader:
         cursor.execute('''
         INSERT INTO box_score (game_id, team_id, team_abbr, team_city, player_id, player_name,
-                               nickname, start_position, comment, min, fgm, fga, fg_pct, three_pm, three_pa, three_pct, 
+                               nickname, start_position, comment, mins, fgm, fga, fg_pct, three_pm, three_pa, three_pct, 
                                ftm, fta, ft_pct, o_reb, d_reb, reb, ast, stl, blk, turnover, pf, pts, plus_minus)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (row['GAME_ID'], row['TEAM_ID'], row['TEAM_ABBREVIATION'], row['TEAM_CITY'], row['PLAYER_ID'],
