@@ -48,14 +48,14 @@ int main(void) {
 
     AST *ast = parse(token_list_head);
     if (ast == NULL) {
-        printf("Error: Invalid Syntax");
+        printf("{\"status\": \"failure\", \"error_code\": %d, \"message\": \"%s\"}\n", 400, "ERROR MESSAGE");
         return 0;
     }
     // print_ast(ast);
 
     char *query_string = interpret(ast);
 
-    printf("%s\n", query_string);
+    printf("{\"status\": \"success\", \"error_code\": %d, \"message\": \"%s\"}\n", 200, "SUCCESS");
 
     // CLEAN UP MEMORY
     free_token_list(token_list_head);
