@@ -56,3 +56,12 @@ FIND golfers WHERE score < 0 AND round = 1 AND tournament = "PGA Championship"
 CHART golfers IN scatter_plot FOR driving_distance VS score WHERE tournament = "US Open"
 
 CHART golfers IN box_plot FOR driving_distance_per_par_5 VS score WHERE tournament = "US Open" and driving_distance_per_par_5 defined as (FIND driving_distance_average WHERE par = 5 AND tournament = "US Open")
+
+
+
+all nba players
+https://ph.global.nba.com/stats2/league/playerlist.json?locale=en
+
+player image
+https://cdn.nba.com/headshots/nba/latest/260x190/ **playerId** .png
+ex. https://cdn.nba.com/headshots/nba/latest/260x190/1629638.png

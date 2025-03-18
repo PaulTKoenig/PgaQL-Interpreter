@@ -4,7 +4,8 @@ import json
 
 
 
-message = 'CHART box_score IN scatters_plot FOR mins VS fgm WHERE game_id = "0022300061"'
+message = "CHART box_score IN scatter_plot FOR fga VS fgm WHERE team_abbr = 'CLE'"
+message = "CHART box_score IN scatter_plot FOR fga VS fgm"
 
 process = subprocess.Popen(
     ['./main'],
@@ -21,26 +22,26 @@ print("Response:", response)
 print("Errors:", errors)
 
 # Parse the JSON response
-try:
-    result = json.loads(response)
-    if result["status"] == "success":
-        print("The process was successful:", result["message"])
-    else:
-        print("The process failed with error code", result["error_code"], ":", result["message"])
-except json.JSONDecodeError:
-    print("Failed to decode JSON response")
+# try:
+#     result = json.loads(response)
+#     if result["status"] == "success":
+#         print("The process was successful:", result["message"])
+#     else:
+#         print("The process failed with error code", result["error_code"], ":", result["message"])
+# except json.JSONDecodeError:
+#     print("Failed to decode JSON response")
 
 
-connection = sqlite3.connect('box_score.db')
-cursor = connection.cursor()
+# connection = sqlite3.connect('box_score.db')
+# cursor = connection.cursor()
 
-cursor.execute(response)
+# cursor.execute(response)
 
 
-results = cursor.fetchall()
+# results = cursor.fetchall()
 
-for row in results:
-    print(row)
+# for row in results:
+#     print(row)
 
-cursor.close()
-connection.close()
+# cursor.close()
+# connection.close()

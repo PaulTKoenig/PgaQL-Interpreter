@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "interpreter.h"
 #include "lexer.h"
 
@@ -141,6 +142,7 @@ char* interpret(AST* ast) {
     TOKEN select_token = {FIND, "SELECT", 6};
     TOKEN from_token = {FIND, "FROM", 4};
     TOKEN where_token = {FIND, "WHERE", 5};
+    TOKEN and_token = {FIND, "AND", 3};
     TOKEN equals_token = {EQUALS, "=", 1};
 
     append_identifier_to_query(&sql_identifier_token_node, &select_token);
@@ -150,15 +152,24 @@ char* interpret(AST* ast) {
 
     append_identifier_to_query(&sql_identifier_token_node, &from_token);
     append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
-    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.chart_type_token);
-    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.x_axis_token);
-    // append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.y_axis_token);
 
-    append_identifier_to_query(&sql_identifier_token_node, &where_token);
-    append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_field_token);
-    convert_and_append_identifier_to_query(&sql_identifier_token_node, &equals_token);
-    append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
+    bool first_where = true;
 
+    while (where_identifier_node != NULL) {
+
+        if (first_where) {
+            first_where = false;
+        } else {
+            append_identifier_to_query(&sql_identifier_token_node, &and_token);
+        }
+
+        append_identifier_to_query(&sql_identifier_token_node, &where_token);
+        append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_field_token);
+        convert_and_append_identifier_to_query(&sql_identifier_token_node, &equals_token);
+        append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
+        
+        where_identifier_node = where_identifier_node->next_where_identifier;
+    }
     // print_sql_token_list(sql_identifier_token_node);
 
     char* query_string = build_query_string(sql_identifier_token_node);

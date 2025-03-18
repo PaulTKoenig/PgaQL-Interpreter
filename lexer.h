@@ -17,6 +17,7 @@ typedef enum {
     SEARCH_LIMIT_TOKEN,
     player,
     WHERE,
+    AND,
     INVALID_TOKEN
 } TOKEN_TYPE;
 

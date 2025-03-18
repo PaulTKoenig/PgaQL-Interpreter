@@ -76,6 +76,9 @@ void print_token(TOKEN token) {
         case WHERE:
             printf("Token Type: WHERE, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
+        case AND:
+            printf("Token Type: AND, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            break;
         case INVALID_TOKEN:
             printf("Unknown Token Type, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
@@ -122,8 +125,6 @@ int set_token_type(TOKEN **token, char *input) {
 
     if (compare_strings("FIND", input, tokenLength)) {
         token_ptr->type = FIND;
-    } else if (compare_strings("game_id", input, tokenLength)) {
-        token_ptr->type = WHERE_FIELD;
     } else if (compare_strings("=", input, tokenLength)) {
         token_ptr->type = EQUALS;
     } else if (compare_strings("CHART", input, tokenLength)) {
@@ -144,6 +145,8 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = player;
     } else if (compare_strings("WHERE", input, tokenLength)) {
         token_ptr->type = WHERE;
+    } else if (compare_strings("AND", input, tokenLength)) {
+        token_ptr->type = AND;
     } else {
         token_ptr->type = WHERE_VALUE;
     }
@@ -192,6 +195,7 @@ char* type_to_string(TOKEN_TYPE t) {
         case SEARCH_LIMIT_TOKEN: return "SEARCH_LIMIT_TOKEN";
         case player: return "player";
         case WHERE: return "WHERE";
+        case AND: return "AND";
         case INVALID_TOKEN: return "INVALID_TOKEN";
         default: return "Unknown";
     }

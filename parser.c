@@ -85,37 +85,63 @@ AST* parse(TOKEN_NODE *token_node) {
     chart_identifier_node.y_axis_token = token;
     ast->chart_identifier = chart_identifier_node;
 
-
-    WHERE_IDENTIFIER where_identifier;
-
-    lexer_next_token(&token_node, &token);
-    if (!expected_token_type(token->type, WHERE)) {
-        return NULL;
-    }
-
-    lexer_next_token(&token_node, &token);
-    if (!expected_token_type(token->type, WHERE_FIELD)) {
-        return NULL;
-    }
-    where_identifier.where_field_token = token;
-
-    lexer_next_token(&token_node, &token);
-    if (!expected_token_type(token->type, EQUALS)) {
-        return NULL;
-    }
-
-    lexer_next_token(&token_node, &token);
-    if (!expected_token_type(token->type, WHERE_VALUE)) {
-        return NULL;
-    }
-
-    where_identifier.where_condition_token = token;
-
-    WHERE_IDENTIFIER_NODE *where_identifier_node = malloc(sizeof(WHERE_IDENTIFIER_NODE));
-    where_identifier_node->where_identifier = where_identifier;
-    where_identifier_node->next_where_identifier = NULL;
     
-    ast->where_identifier_list = where_identifier_node;
+    bool first_where = true;
+    WHERE_IDENTIFIER_NODE *where_identifier_node;
+
+    while (token_node != NULL) {
+
+        WHERE_IDENTIFIER where_identifier;
+
+        if (!first_where) {
+            lexer_next_token(&token_node, &token);
+            if (!expected_token_type(token->type, AND)) {
+                return NULL;
+            }
+        }
+
+        lexer_next_token(&token_node, &token);
+        if (!expected_token_type(token->type, WHERE)) {
+            return NULL;
+        }
+
+        lexer_next_token(&token_node, &token);
+        if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
+            return NULL;
+        }
+        where_identifier.where_field_token = token;
+
+        lexer_next_token(&token_node, &token);
+        if (!expected_token_type(token->type, EQUALS)) {
+            return NULL;
+        }
+
+        lexer_next_token(&token_node, &token);
+        if (!expected_token_type(token->type, WHERE_VALUE)) {
+            return NULL;
+        }
+
+        where_identifier.where_condition_token = token;
+        
+        if (first_where) {
+            where_identifier_node = malloc(sizeof(WHERE_IDENTIFIER_NODE));
+            where_identifier_node->where_identifier = where_identifier;
+            where_identifier_node->next_where_identifier = NULL;
+            
+            ast->where_identifier_list = where_identifier_node;
+
+            first_where = false;
+        } else {
+            WHERE_IDENTIFIER_NODE *next_where_identifier_node = malloc(sizeof(WHERE_IDENTIFIER_NODE));
+            next_where_identifier_node->where_identifier = where_identifier;
+            next_where_identifier_node->next_where_identifier = NULL;
+
+            where_identifier_node->next_where_identifier = next_where_identifier_node;
+            where_identifier_node = next_where_identifier_node;
+        }
+
+    }
+    
     return ast;
 }
 
@@ -124,7 +150,15 @@ void print_ast(AST *ast) {
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.chart_type_token->type));
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.x_axis_token->type));
     printf("Token type in AST: %s\n", type_to_string(ast->chart_identifier.y_axis_token->type));
-    printf("Token type in AST: %s\n", type_to_string(ast->where_identifier_list->where_identifier.where_condition_token->type));
+    
+    WHERE_IDENTIFIER_NODE *temp_where_identifier_list = ast->where_identifier_list;
+            
+    while (temp_where_identifier_list != NULL) {
+        printf("Token type in AST: %s, value:%s\n", type_to_string(temp_where_identifier_list->where_identifier.where_condition_token->type), temp_where_identifier_list->where_identifier.where_condition_token->content);
+        temp_where_identifier_list = temp_where_identifier_list->next_where_identifier;
+    }
+    // printf("Token type in AST: %s, value:%s\n", type_to_string(ast->where_identifier_list->where_identifier.where_condition_token->type), ast->where_identifier_list->where_identifier.where_condition_token->content);
+
     printf("\n");
 }
 
