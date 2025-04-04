@@ -8,6 +8,8 @@ typedef struct {
     TOKEN *chart_type_token;
     TOKEN *x_axis_token;
     TOKEN *y_axis_token;
+    TOKEN *x_axis_aggregate_token;
+    TOKEN *y_axis_aggregate_token;
 } CHART_IDENTIFIER_NODE;
 
 typedef struct {

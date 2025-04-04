@@ -70,6 +70,48 @@ void append_column_identifier_to_query(SQL_IDENTIFIER_TOKEN_NODE** token_node, T
     append_to_list(token_node, new_token_node);
 }
 
+
+
+void append_column_identifier_to_query_fixed(SQL_IDENTIFIER_TOKEN_NODE** token_node, TOKEN* token, TOKEN* aggregate_token, bool lastColumnIdentifier) {
+
+    SQL_IDENTIFIER_TOKEN_NODE *new_token_node = malloc(sizeof(SQL_IDENTIFIER_TOKEN_NODE));
+
+    int query_identifier_length = token->token_length;
+    if (!lastColumnIdentifier) {
+        query_identifier_length++;
+    }
+
+    if (aggregate_token != NULL) {
+        query_identifier_length += aggregate_token->token_length + 2;
+    }
+
+    char *token_content = malloc(query_identifier_length * sizeof(char));
+
+    if (aggregate_token != NULL) {
+        strncpy(token_content, aggregate_token->content, aggregate_token->token_length);
+        strcat(token_content, "(");
+    }
+
+    strncat(token_content, token->content, token->token_length);
+
+    if (aggregate_token != NULL) {
+        strcat(token_content, ")");
+    }
+
+    if (!lastColumnIdentifier) {
+        token_content[query_identifier_length-1] = ',';
+    }
+
+    SQL_IDENTIFIER_TOKEN new_token = { token_content, query_identifier_length };
+
+    
+    new_token_node->current_token = new_token;
+    new_token_node->next_token = NULL;
+
+    
+    append_to_list(token_node, new_token_node);
+}
+
 char* convert_token_to_sql_identifier(TOKEN *token) {
 
     if (token->type == FIND) {
@@ -84,6 +126,16 @@ char* convert_token_to_sql_identifier(TOKEN *token) {
         }
     } else if (token->type == EQUALS) {
         return "=";
+    } else if (token->type == CHARTED_TOKEN_TYPE) {
+        if (strncmp(token->content, "season_player_box_score", token->token_length) == 0
+            || strncmp(token->content, "box_score", token->token_length) == 0) {
+            return "player_id";
+        } else if (strncmp(token->content, "season_team_box_score", token->token_length) == 0
+                    || strncmp(token->content, "game_team_box_score", token->token_length) == 0) {
+            return "team_id";
+        } else {
+            return "";
+        }
     } else {
         printf("Element is unknown: %s\n", type_to_string(token->type));
     }
@@ -139,37 +191,49 @@ char* interpret(AST* ast) {
     CHART_IDENTIFIER_NODE chart_identifier_node = ast->chart_identifier;
     WHERE_IDENTIFIER_NODE *where_identifier_node = ast->where_identifier_list;
 
-    TOKEN select_token = {FIND, "SELECT", 6};
-    TOKEN from_token = {FIND, "FROM", 4};
-    TOKEN where_token = {FIND, "WHERE", 5};
-    TOKEN and_token = {FIND, "AND", 3};
+    TOKEN select_token = {SELECT, "SELECT", 6};
+    TOKEN box_score_token = {BOX_SCORE, "box_score", 9};
+    TOKEN from_token = {FROM, "FROM", 4};
+    TOKEN where_token = {WHERE, "WHERE", 5};
+    TOKEN and_token = {AND, "AND", 3};
     TOKEN equals_token = {EQUALS, "=", 1};
+    TOKEN group_by_token = {GROUP_BY, "GROUP BY", 8};
+    TOKEN comma_token = {COMMA, ",", 1};
 
     append_identifier_to_query(&sql_identifier_token_node, &select_token);
-    append_column_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.x_axis_token);
-    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.y_axis_token);
+    
+    convert_and_append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
+    append_identifier_to_query(&sql_identifier_token_node, &comma_token);
 
+    append_column_identifier_to_query_fixed(&sql_identifier_token_node, chart_identifier_node.x_axis_token, chart_identifier_node.x_axis_aggregate_token, false);
+    append_column_identifier_to_query_fixed(&sql_identifier_token_node, chart_identifier_node.y_axis_token, chart_identifier_node.y_axis_aggregate_token, true);
 
     append_identifier_to_query(&sql_identifier_token_node, &from_token);
-    append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
+    append_identifier_to_query(&sql_identifier_token_node, &box_score_token);
 
     bool first_where = true;
 
     while (where_identifier_node != NULL) {
 
         if (first_where) {
+            append_identifier_to_query(&sql_identifier_token_node, &where_token);
             first_where = false;
         } else {
             append_identifier_to_query(&sql_identifier_token_node, &and_token);
         }
 
-        append_identifier_to_query(&sql_identifier_token_node, &where_token);
         append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_field_token);
         convert_and_append_identifier_to_query(&sql_identifier_token_node, &equals_token);
         append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
         
         where_identifier_node = where_identifier_node->next_where_identifier;
     }
+
+    if (chart_identifier_node.x_axis_aggregate_token != NULL && chart_identifier_node.y_axis_aggregate_token != NULL) {
+        append_identifier_to_query(&sql_identifier_token_node, &group_by_token);
+        convert_and_append_identifier_to_query(&sql_identifier_token_node, chart_identifier_node.charted_token);
+    }
+
     // print_sql_token_list(sql_identifier_token_node);
 
     char* query_string = build_query_string(sql_identifier_token_node);

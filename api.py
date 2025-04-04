@@ -4,24 +4,24 @@ import json
 
 
 
-message = "CHART box_score IN scatter_plot FOR fga VS fgm WHERE team_abbr = 'CLE'"
-message = "CHART box_score IN scatter_plot FOR fga VS fgm"
+# message = "CHART box_score IN scatter_plot FOR fga VS fgm WHERE team_abbr = 'CLE'"
+# message = "CHART season_player_box_score IN scatter_plot FOR AVG pts VS SUM fgm WHERE team_abbr = 'CLE' AND player_id = '1627745'"
 
-process = subprocess.Popen(
-    ['./main'],
-    stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
-)
+# process = subprocess.Popen(
+#     ['./main'],
+#     stdin=subprocess.PIPE,
+#     stdout=subprocess.PIPE,
+#     stderr=subprocess.PIPE,
+#     text=True
+# )
 
-response, errors = process.communicate(input=message)
+# response, errors = process.communicate(input=message)
 
-# Print the response for debugging
-print("Response:", response)
-print("Errors:", errors)
+# # Print the response for debugging
+# print("Response:", response)
+# print("Errors:", errors)
 
-# Parse the JSON response
+# # Parse the JSON response
 # try:
 #     result = json.loads(response)
 #     if result["status"] == "success":
@@ -31,17 +31,20 @@ print("Errors:", errors)
 # except json.JSONDecodeError:
 #     print("Failed to decode JSON response")
 
+# query = result["message"]
 
-# connection = sqlite3.connect('box_score.db')
-# cursor = connection.cursor()
+query = "SELECT player_id, AVG(pts), SUM(fgm) FROM box_score WHERE team_abbr = 'CLE' GROUP BY player_id"
 
-# cursor.execute(response)
+connection = sqlite3.connect('box_score.db')
+cursor = connection.cursor()
+
+cursor.execute(query)
 
 
-# results = cursor.fetchall()
+results = cursor.fetchall()
 
-# for row in results:
-#     print(row)
+for row in results:
+    print(row)
 
-# cursor.close()
-# connection.close()
+cursor.close()
+connection.close()

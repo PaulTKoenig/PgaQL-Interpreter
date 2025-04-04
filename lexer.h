@@ -18,6 +18,12 @@ typedef enum {
     player,
     WHERE,
     AND,
+    SELECT,
+    FROM,
+    BOX_SCORE,
+    AGGREGATE,
+    GROUP_BY,
+    COMMA,
     INVALID_TOKEN
 } TOKEN_TYPE;
 

@@ -65,3 +65,12 @@ https://ph.global.nba.com/stats2/league/playerlist.json?locale=en
 player image
 https://cdn.nba.com/headshots/nba/latest/260x190/ **playerId** .png
 ex. https://cdn.nba.com/headshots/nba/latest/260x190/1629638.png
+
+
+
+
+
+TODO SEASON
+SELECT player_id, AVG(pts)
+FROM box_score
+GROUP BY game_id;

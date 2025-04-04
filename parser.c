@@ -12,6 +12,7 @@ void lexer_next_token(TOKEN_NODE **token_node, TOKEN **token) {
 bool expected_token_type(TOKEN_TYPE actualType, TOKEN_TYPE expectedType) {
     if (actualType != expectedType) {
         fprintf(stderr, "Error: Expected %d, got %d\n", expectedType, actualType);
+        fprintf(stderr, "Error: Expected %d, got %d\n", expectedType, actualType);
         return false;
     }
     return true;
@@ -68,6 +69,13 @@ AST* parse(TOKEN_NODE *token_node) {
     }
 
     lexer_next_token(&token_node, &token);
+    if (expected_token_type(token->type, AGGREGATE)) {
+        chart_identifier_node.x_axis_aggregate_token = token;
+        lexer_next_token(&token_node, &token);
+    } else {
+        chart_identifier_node.x_axis_aggregate_token = NULL;
+    }
+
     if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
         return NULL;
     }
@@ -79,6 +87,13 @@ AST* parse(TOKEN_NODE *token_node) {
     }
 
     lexer_next_token(&token_node, &token);
+    if (expected_token_type(token->type, AGGREGATE)) {
+        chart_identifier_node.y_axis_aggregate_token = token;
+        lexer_next_token(&token_node, &token);
+    } else {
+        chart_identifier_node.y_axis_aggregate_token = NULL;
+    }
+
     if (!expected_token_type(token->type, AXIS_TOKEN_TYPE)) {
         return NULL;
     }
@@ -93,16 +108,16 @@ AST* parse(TOKEN_NODE *token_node) {
 
         WHERE_IDENTIFIER where_identifier;
 
-        if (!first_where) {
+        if (first_where) {
+            lexer_next_token(&token_node, &token);
+            if (!expected_token_type(token->type, WHERE)) {
+                return NULL;
+            }
+        } else {
             lexer_next_token(&token_node, &token);
             if (!expected_token_type(token->type, AND)) {
                 return NULL;
             }
-        }
-
-        lexer_next_token(&token_node, &token);
-        if (!expected_token_type(token->type, WHERE)) {
-            return NULL;
         }
 
         lexer_next_token(&token_node, &token);

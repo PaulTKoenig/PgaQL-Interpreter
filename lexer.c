@@ -7,7 +7,7 @@
 
 
 const char *SEARCHABLE_FIELDS[] = {
-    "team_abbr", "team_city", "player_name", "start_position",
+    "team_abbr", "team_city", "player_id", "player_name", "start_position",
     "mins", "fgm", "fga", "fg_pct", "three_pm", "three_pa", "three_pct",
     "ftm", "fta", "ft_pct", "o_reb", "d_reb", "reb", "ast", "stl",
     "blk", "turnover", "pf", "pts", "plus_minus"
@@ -79,6 +79,9 @@ void print_token(TOKEN token) {
         case AND:
             printf("Token Type: AND, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
+        case AGGREGATE:
+            printf("Token Type: AGGREGATE, Content: %c, Length: %d\n", *(token.content), token.token_length);
+            break;
         case INVALID_TOKEN:
             printf("Unknown Token Type, Content: %c, Length: %d\n", *(token.content), token.token_length);
             break;
@@ -137,8 +140,6 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = AXIS_TOKEN_TYPE;
     } else if (compare_strings("VS", input, tokenLength)) {
         token_ptr->type = VS;
-    } else if (compare_strings("box_score", input, tokenLength)) {
-        token_ptr->type = CHARTED_TOKEN_TYPE;
     } else if (compare_strings("scatter_plot", input, tokenLength)) {
         token_ptr->type = CHART_TYPE;
     } else if (compare_strings("player", input, tokenLength)) {
@@ -147,6 +148,22 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = WHERE;
     } else if (compare_strings("AND", input, tokenLength)) {
         token_ptr->type = AND;
+    } else if (compare_strings("box_score", input, tokenLength)) {
+        token_ptr->type = CHARTED_TOKEN_TYPE;
+    } else if (compare_strings("season_player_box_score", input, tokenLength)) {
+        token_ptr->type = CHARTED_TOKEN_TYPE;
+    } else if (compare_strings("season_team_box_score", input, tokenLength)) {
+        token_ptr->type = CHARTED_TOKEN_TYPE;
+    } else if (compare_strings("AVG", input, tokenLength)) {
+        token_ptr->type = AGGREGATE;
+    } else if (compare_strings("SUM", input, tokenLength)) {
+        token_ptr->type = AGGREGATE;
+    } else if (compare_strings("MAX", input, tokenLength)) {
+        token_ptr->type = AGGREGATE;
+    } else if (compare_strings("MIN", input, tokenLength)) {
+        token_ptr->type = AGGREGATE;
+    } else if (compare_strings("COUNT", input, tokenLength)) {
+        token_ptr->type = AGGREGATE;
     } else {
         token_ptr->type = WHERE_VALUE;
     }
@@ -196,6 +213,7 @@ char* type_to_string(TOKEN_TYPE t) {
         case player: return "player";
         case WHERE: return "WHERE";
         case AND: return "AND";
+        case AGGREGATE: return "AGGREGATE";
         case INVALID_TOKEN: return "INVALID_TOKEN";
         default: return "Unknown";
     }
