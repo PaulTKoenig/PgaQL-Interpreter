@@ -118,9 +118,9 @@ char* convert_token_to_sql_identifier(TOKEN *token) {
         return "SELECT";
     } else if (token->type == SEARCH_LIMIT_TOKEN) {
         if (strncmp(token->content, "FIRST", token->token_length) == 0) {
-            return "ORDER BY player_id ASC LIMIT 1";
+            return "ORDER BY playerId ASC LIMIT 1";
         } else if (strncmp(token->content, "LAST", token->token_length) == 0) {
-            return "ORDER BY player_id DESC LIMIT 1";
+            return "ORDER BY playerId DESC LIMIT 1";
         } else {
             return "";
         }
@@ -128,11 +128,11 @@ char* convert_token_to_sql_identifier(TOKEN *token) {
         return "=";
     } else if (token->type == CHARTED_TOKEN_TYPE) {
         if (strncmp(token->content, "season_player_box_score", token->token_length) == 0
-            || strncmp(token->content, "box_score", token->token_length) == 0) {
-            return "player_id";
+            || strncmp(token->content, "player_stats", token->token_length) == 0) {
+            return "playerId";
         } else if (strncmp(token->content, "season_team_box_score", token->token_length) == 0
                     || strncmp(token->content, "game_team_box_score", token->token_length) == 0) {
-            return "team_id";
+            return "teamId";
         } else {
             return "";
         }
@@ -192,7 +192,7 @@ char* interpret(AST* ast) {
     WHERE_IDENTIFIER_NODE *where_identifier_node = ast->where_identifier_list;
 
     TOKEN select_token = {SELECT, "SELECT", 6};
-    TOKEN box_score_token = {BOX_SCORE, "box_score", 9};
+    TOKEN player_stats_token = {PLAYER_STATS, "player_stats", 12};
     TOKEN from_token = {FROM, "FROM", 4};
     TOKEN where_token = {WHERE, "WHERE", 5};
     TOKEN and_token = {AND, "AND", 3};
@@ -209,7 +209,7 @@ char* interpret(AST* ast) {
     append_column_identifier_to_query_fixed(&sql_identifier_token_node, chart_identifier_node.y_axis_token, chart_identifier_node.y_axis_aggregate_token, true);
 
     append_identifier_to_query(&sql_identifier_token_node, &from_token);
-    append_identifier_to_query(&sql_identifier_token_node, &box_score_token);
+    append_identifier_to_query(&sql_identifier_token_node, &player_stats_token);
 
     bool first_where = true;
 
@@ -239,4 +239,28 @@ char* interpret(AST* ast) {
     char* query_string = build_query_string(sql_identifier_token_node);
 
     return query_string;
+}
+
+char* get_x_column_name(AST* ast) {
+
+    SQL_IDENTIFIER_TOKEN_NODE *sql_identifier_token_node = NULL;
+
+    CHART_IDENTIFIER_NODE chart_identifier_node = ast->chart_identifier;
+
+    append_column_identifier_to_query_fixed(&sql_identifier_token_node, chart_identifier_node.x_axis_token, NULL, true);
+    char* x_column_name = build_query_string(sql_identifier_token_node);
+
+    return x_column_name;
+}
+
+char* get_y_column_name(AST* ast) {
+
+    SQL_IDENTIFIER_TOKEN_NODE *sql_identifier_token_node = NULL;
+
+    CHART_IDENTIFIER_NODE chart_identifier_node = ast->chart_identifier;
+
+    append_column_identifier_to_query_fixed(&sql_identifier_token_node, chart_identifier_node.y_axis_token, NULL, true);
+    char* y_column_name = build_query_string(sql_identifier_token_node);
+
+    return y_column_name;
 }

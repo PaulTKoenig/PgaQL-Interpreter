@@ -11,8 +11,7 @@ void lexer_next_token(TOKEN_NODE **token_node, TOKEN **token) {
 
 bool expected_token_type(TOKEN_TYPE actualType, TOKEN_TYPE expectedType) {
     if (actualType != expectedType) {
-        fprintf(stderr, "Error: Expected %d, got %d\n", expectedType, actualType);
-        fprintf(stderr, "Error: Expected %d, got %d\n", expectedType, actualType);
+        // fprintf(stderr, "Error: Expected %d, got %d\n", expectedType, actualType);
         return false;
     }
     return true;
@@ -50,12 +49,10 @@ AST* parse(TOKEN_NODE *token_node) {
     }
     chart_identifier_node.charted_token = token;
 
-
     lexer_next_token(&token_node, &token);
     if (!expected_token_type(token->type, IN)) {
         return NULL;
     }
-
 
     lexer_next_token(&token_node, &token);
     if (!expected_token_type(token->type, CHART_TYPE)) {
@@ -100,7 +97,6 @@ AST* parse(TOKEN_NODE *token_node) {
     chart_identifier_node.y_axis_token = token;
     ast->chart_identifier = chart_identifier_node;
 
-    
     bool first_where = true;
     WHERE_IDENTIFIER_NODE *where_identifier_node;
 

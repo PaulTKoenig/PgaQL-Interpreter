@@ -15,4 +15,7 @@ typedef struct sql_identifier_token_node {
 
 char* interpret(AST* ast);
 
+char* get_x_column_name(AST* ast);
+char* get_y_column_name(AST* ast);
+
 #endif

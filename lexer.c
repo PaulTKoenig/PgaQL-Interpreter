@@ -7,7 +7,9 @@
 
 
 const char *SEARCHABLE_FIELDS[] = {
-    "team_abbr", "team_city", "player_id", "player_name", "start_position",
+    "firstName", "lastName", "playerId", "gameId", "gameDate",
+    "playerteamCity", "playerteamName", "opponentteamCity", "opponentteamName",
+    "gameType", "gameLabel", "gameSubLabel", "seriesGameNumber", "win", "home",
     "mins", "fgm", "fga", "fg_pct", "three_pm", "three_pa", "three_pct",
     "ftm", "fta", "ft_pct", "o_reb", "d_reb", "reb", "ast", "stl",
     "blk", "turnover", "pf", "pts", "plus_minus"
@@ -148,7 +150,7 @@ int set_token_type(TOKEN **token, char *input) {
         token_ptr->type = WHERE;
     } else if (compare_strings("AND", input, tokenLength)) {
         token_ptr->type = AND;
-    } else if (compare_strings("box_score", input, tokenLength)) {
+    } else if (compare_strings("player_stats", input, tokenLength)) {
         token_ptr->type = CHARTED_TOKEN_TYPE;
     } else if (compare_strings("season_player_box_score", input, tokenLength)) {
         token_ptr->type = CHARTED_TOKEN_TYPE;

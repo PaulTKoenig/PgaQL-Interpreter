@@ -20,7 +20,7 @@ typedef enum {
     AND,
     SELECT,
     FROM,
-    BOX_SCORE,
+    PLAYER_STATS,
     AGGREGATE,
     GROUP_BY,
     COMMA,
