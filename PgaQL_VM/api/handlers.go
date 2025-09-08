@@ -20,9 +20,9 @@ type QueryResponse struct {
 func HandleQuery(w http.ResponseWriter, r *http.Request) {
     
     queryParams := r.URL.Query()
-    queryString := queryParams.Get("query_string") // returns "" if missing
+    queryString := queryParams.Get("query_string")
 
-    if queryString == "" {
+    if (queryString == "") {
         http.Error(w, "missing required query parameter: query_string", http.StatusBadRequest)
         return
     }
