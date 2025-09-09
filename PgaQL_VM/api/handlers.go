@@ -6,7 +6,7 @@ import (
     "encoding/json"
 
     "github.com/PaulTKoenig/PgaQL_Backend/compiler"
-    // "github.com/PaulTKoenig/PgaQL_Backend/vm"
+    "github.com/PaulTKoenig/PgaQL_Backend/vm"
 )
 
 type QueryRequest struct {
@@ -14,7 +14,7 @@ type QueryRequest struct {
 }
 
 type QueryResponse struct {
-    Data []compiler.Instruction `json:"data"`
+    Data []map[string]interface{} `json:"data"`
 }
 
 func HandleQuery(w http.ResponseWriter, r *http.Request) {
@@ -35,18 +35,14 @@ func HandleQuery(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // // 2. Initialize storage (CSV backend for now)
-    // store := storage.NewCSVStore("data/player_stats.csv")
-
-    // // 3. Run VM with bytecode
-    // results, err := vm.Execute(bytecode, store)
-    // if err != nil {
-    //     http.Error(w, err.Error(), http.StatusInternalServerError)
-    //     return
-    // }
+    results, err := vm.Execute(bytecode, store)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
 	resp := QueryResponse{
-	    Data: bytecode,
+	    Data: results,
 	}
 	w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(resp)
