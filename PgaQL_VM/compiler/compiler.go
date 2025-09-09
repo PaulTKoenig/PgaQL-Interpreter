@@ -52,18 +52,10 @@ func (op OpCode) String() string {
         return "OP_LOAD_FIELD"
     case OP_LOAD_CONST:
         return "OP_LOAD_CONST"
-    case OP_PUSH:
-        return "OP_PUSH"
     case OP_EQ:
         return "OP_EQ"
     case OP_FILTER:
         return "OP_FILTER"
-    case OP_DEFINE_STAT:
-        return "OP_DEFINE_STAT"
-    case OP_GROUP_BY:
-        return "OP_GROUP_BY"
-    case OP_AGGREGATE:
-        return "OP_AGGREGATE"
     case OP_OUTPUT:
         return "OP_OUTPUT"
     case OP_PROJECT:
