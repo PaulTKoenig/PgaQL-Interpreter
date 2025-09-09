@@ -35,7 +35,7 @@ func HandleQuery(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    results, err := vm.Execute(bytecode, store)
+    results, err := vm.Execute(bytecode)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return

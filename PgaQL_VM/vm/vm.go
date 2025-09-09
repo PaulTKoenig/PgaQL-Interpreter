@@ -2,12 +2,14 @@ package vm
 
 import (
     "errors"
+    "fmt"
+    "log"
 
     "github.com/PaulTKoenig/PgaQL_Backend/storage"
     "github.com/PaulTKoenig/PgaQL_Backend/compiler"
 )
 
-func Execute(instructions []Instruction) ([]map[string]interface{}, error) {
+func Execute(instructions []compiler.Instruction) ([]map[string]interface{}, error) {
 
     var results []map[string]interface{}
 
@@ -24,7 +26,7 @@ func Execute(instructions []Instruction) ([]map[string]interface{}, error) {
         stack := []interface{}{}
         out := make(map[string]interface{})
 
-        for _, instr := range instructions {
+        for _, instr := range instructions[1:] {
             switch instr.Op {
                 case compiler.OP_SCAN:
                     continue // Already handled
@@ -47,6 +49,7 @@ func Execute(instructions []Instruction) ([]map[string]interface{}, error) {
                     b := stack[len(stack)-1]
                     a := stack[len(stack)-2]
                     stack = stack[:len(stack)-2]
+
                     stack = append(stack, a == b)
 
                 case compiler.OP_FILTER:
@@ -75,12 +78,13 @@ func Execute(instructions []Instruction) ([]map[string]interface{}, error) {
                     }
 
                 default:
-                    return nil, errors.New("unsupported instruction: " + instr.Op)
+                    return nil, errors.New("unsupported instruction: " + instr.Op.String())
             }   
         }
 
     skipRow:
     }
+    log.Println(results);
     return results, nil
 }
 
