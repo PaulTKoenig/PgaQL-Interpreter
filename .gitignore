@@ -1,4 +1,4 @@
 .DS_STORE
 main
-box_score.db
+*.db
 *.csv
