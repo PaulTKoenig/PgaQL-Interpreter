@@ -1,7 +1,7 @@
 SRC_DIR = src
 BIN_DIR = bin
 
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/lexer.c $(SRC_DIR)/parser.c $(SRC_DIR)/interpreter.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/lexer.c $(SRC_DIR)/parser.c $(SRC_DIR)/interpreter.c $(SRC_DIR)/compiler.c
 
 TARGET = $(BIN_DIR)/compiler
 

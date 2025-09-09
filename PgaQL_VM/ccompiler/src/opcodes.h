@@ -1,0 +1,16 @@
+#ifndef OPCODES_H
+#define OPCODES_H
+
+typedef enum {
+    OP_SCAN,
+    OP_LOAD_FIELD,
+    OP_LOAD_CONST,
+    OP_EQ,
+    OP_AND,
+    OP_OR,
+    OP_FILTER,
+    OP_PROJECT,
+    OP_OUTPUT
+} OpCode;
+
+#endif

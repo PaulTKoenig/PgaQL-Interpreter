@@ -4,6 +4,7 @@
 #include "lexer.h"
 #include "parser.h"
 #include "interpreter.h"
+#include "compiler.h"
 
 #define CHUNK_SIZE 256
 
@@ -42,22 +43,38 @@ int main(void) {
 
     TOKEN_NODE *token_list_head = lex(input);
 
-    print_token_list(token_list_head);
+    // print_token_list(token_list_head);
 
     AST *ast = parse(token_list_head);
     if (ast == NULL) {
         printf("{\"status\": \"failure\", \"error_code\": %d, \"message\": \"%s\"}\n", 400, "ERROR MESSAGE");
         return 0;
     }
-    print_ast(ast);
+    // print_ast(ast);
 
     char *query_string = interpret(ast);
     printf("%s\n", query_string);
 
+    int instructions_len;
+    Instruction* instructions = compile(ast, &instructions_len);
+
+    printf("[\n");
+    for(int i=0; i<instructions_len; i++) {
+        printf("{\"Op\":%d,\"Args\":[", instructions[i].Op);
+        for(int j = 0; instructions[i].Args[j] != NULL; j++) {
+            if(j > 0) printf(",");
+            printf("\"%s\"", instructions[i].Args[j]);
+        }
+        printf("]}");
+    }
+    printf("]\n");
+
+    return 0;
+
     char *x_column_name = get_x_column_name(ast);
-    printf("%s\n", x_column_name);
+    // printf("%s\n", x_column_name);
     char *y_column_name = get_y_column_name(ast);
-    printf("%s\n", y_column_name);
+    // printf("%s\n", y_column_name);
 
     printf("{\"status\": \"success\", \"error_code\": %d, \"message\": { \"query\": \"%s\", \"x_column_name\": \"%s\", \"y_column_name\": \"%s\" }}\n", 200, query_string, x_column_name, y_column_name);
 
