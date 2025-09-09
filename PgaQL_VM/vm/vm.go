@@ -3,7 +3,6 @@ package vm
 import (
     "errors"
     "fmt"
-    "log"
 
     "github.com/PaulTKoenig/PgaQL_Backend/storage"
     "github.com/PaulTKoenig/PgaQL_Backend/compiler"

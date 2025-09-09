@@ -18,6 +18,8 @@ const (
     OP_AGGREGATE
     OP_OUTPUT
     OP_PROJECT
+    OP_AND
+    OP_OR
 )
 
 type Instruction struct {
@@ -71,6 +73,10 @@ func (op OpCode) String() string {
         return "OP_OUTPUT"
     case OP_PROJECT:
         return "OP_PROJECT"
+    case OP_AND:
+        return "OP_AND"
+    case OP_OR:
+        return "OP_OR"
     default:
         return fmt.Sprintf("UNKNOWN(%d)", int(op))
     }
