@@ -52,6 +52,24 @@ func Execute(instructions []compiler.Instruction) ([]map[string]interface{}, err
 
                     stack = append(stack, a == b)
 
+                case compiler.OP_AND:
+                    if len(stack) < 2 {
+                        return nil, errors.New("AND requires 2 boolean operands")
+                    }
+                    b := stack[len(stack)-1].(bool)
+                    a := stack[len(stack)-2].(bool)
+                    stack = stack[:len(stack)-2]
+                    stack = append(stack, a && b)
+
+                case compiler.OP_OR:
+                    if len(stack) < 2 {
+                        return nil, errors.New("OR requires 2 boolean operands")
+                    }
+                    b := stack[len(stack)-1].(bool)
+                    a := stack[len(stack)-2].(bool)
+                    stack = stack[:len(stack)-2]
+                    stack = append(stack, a || b)
+
                 case compiler.OP_FILTER:
                     if len(stack) < 1 {
                         return nil, errors.New("FILTER requires condition value")
@@ -84,17 +102,6 @@ func Execute(instructions []compiler.Instruction) ([]map[string]interface{}, err
 
     skipRow:
     }
-    log.Println(results);
+
     return results, nil
 }
-
-// TODO
-// TYPE SAFETY FOR COMPARISONS (EQ) AND ASSERTIONS (FILTER)
-
-// {Op: OP_SCAN, Args: []interface{}{"players"}},
-// {Op: OP_LOAD_FIELD, Args: []interface{}{"season"}},
-// {Op: OP_LOAD_CONST, Args: []interface{}{2025}},
-// {Op: OP_EQ},
-// {Op: OP_FILTER},
-// {Op: OP_PROJECT, Args: []interface{}{"pts", "date"}},
-// {Op: OP_OUTPUT},
