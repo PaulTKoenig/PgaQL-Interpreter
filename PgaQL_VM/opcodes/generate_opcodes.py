@@ -19,12 +19,29 @@ def generate_c_header(opcodes, filename="opcodes.h"):
 def generate_go_file(opcodes, filename="opcodes.go"):
 	with open(filename, "w") as f:
 		f.write("package compiler\n\n")
+
+		f.write("import (\n")
+		f.write("	\"fmt\"\n")
+		f.write(")\n")
+		f.write("\n")
+
 		f.write("type OpCode int\n\n")
 		f.write("const (\n")
 		for i, op in enumerate(opcodes):
 			f.write(f"    {op} OpCode = {i}\n")
 		f.write(")\n")
 		print(f"Generated Go file: {filename}")
+
+		f.write("\n")
+		f.write("func (op OpCode) String() string {\n")
+		f.write("    switch op {\n")
+		for op in opcodes:
+			f.write(f"    case {op}:\n")
+			f.write(f"        return \"{op}\"\n")
+		f.write("    default:\n")
+		f.write("        return fmt.Sprintf(\"UNKNOWN(%d)\", int(op))\n")
+		f.write("    }\n")
+		f.write("}\n")
 
 
 def main():
