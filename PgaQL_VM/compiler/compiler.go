@@ -2,24 +2,9 @@ package compiler
 
 import (
     "fmt"
-)
-
-type OpCode int
-
-const (
-    OP_SCAN OpCode = iota
-    OP_LOAD_FIELD
-    OP_LOAD_CONST
-    OP_PUSH
-    OP_EQ
-    OP_FILTER
-    OP_DEFINE_STAT
-    OP_GROUP_BY
-    OP_AGGREGATE
-    OP_OUTPUT
-    OP_PROJECT
-    OP_AND
-    OP_OR
+    "log"
+    "os/exec"
+    "encoding/json"
 )
 
 type Instruction struct {
@@ -31,6 +16,23 @@ type Bytecode []Instruction
 
 func Compile(query string) ([]Instruction, error) {
 
+    cmd := exec.Command("./ccompiler/bin/compiler", query)
+    output, err := cmd.Output()
+    if err != nil {
+        return nil, err
+    }
+
+    var instructions []Instruction
+    err = json.Unmarshal(output, &instructions)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    log.Println("1")
+    log.Println(instructions)
+    log.Println("2")
+    // return output, nil // bytecode as raw []byte
+
     return []Instruction{
         {Op: OP_SCAN, Args: []interface{}{"games"}},
         {Op: OP_LOAD_FIELD, Args: []interface{}{"season"}},
@@ -40,13 +42,6 @@ func Compile(query string) ([]Instruction, error) {
         {Op: OP_PROJECT, Args: []interface{}{"pts", "date"}},
         {Op: OP_OUTPUT},
 	}, nil
-
-    // cmd := exec.Command("./bin/compiler", query)
-    // output, err := cmd.Output()
-    // if err != nil {
-    //     return nil, err
-    // }
-    // return output, nil // bytecode as raw []byte
 }
 
 func (op OpCode) String() string {
