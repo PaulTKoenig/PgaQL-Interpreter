@@ -69,22 +69,19 @@ Instruction* compile(AST* ast, int* out_len) {
     // PLACE EACH WHERE CLAUSE ON STACK AND CHECK IF EQ, ADDING ANY AND or OR
 
 
+    bool first_where = true;
+
     while (where_identifier_node != NULL) {
 
-        // if (first_where) {
-        //     append_identifier_to_query(&sql_identifier_token_node, &where_token);
-        //     first_where = false;
-        // } else {
-        //     append_identifier_to_query(&sql_identifier_token_node, &and_token);
-        // }
-
-        // append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_field_token);
-        // convert_and_append_identifier_to_query(&sql_identifier_token_node, &equals_token);
-        // append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
-        
         append_token_instruction(&ib, OP_LOAD_FIELD, where_identifier_node->where_identifier.where_field_token, NULL);
         append_token_instruction(&ib, OP_LOAD_CONST, where_identifier_node->where_identifier.where_condition_token, NULL);
         append_token_instruction(&ib, OP_EQ, NULL, NULL);
+
+        if (first_where) {
+            first_where = false;
+        } else {
+            append_token_instruction(&ib, OP_AND, NULL, NULL);
+        }
 
         where_identifier_node = where_identifier_node->next_where_identifier;
     }
