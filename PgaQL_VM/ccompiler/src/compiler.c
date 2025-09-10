@@ -83,14 +83,13 @@ Instruction* compile(AST* ast, int* out_len) {
         // append_identifier_to_query(&sql_identifier_token_node, where_identifier_node->where_identifier.where_condition_token);
         
         append_token_instruction(&ib, OP_LOAD_FIELD, where_identifier_node->where_identifier.where_field_token, NULL);
-        append_token_instruction(&ib, OP_LOAD_FIELD, where_identifier_node->where_identifier.where_condition_token, NULL);
+        append_token_instruction(&ib, OP_LOAD_CONST, where_identifier_node->where_identifier.where_condition_token, NULL);
+        append_token_instruction(&ib, OP_EQ, NULL, NULL);
 
         where_identifier_node = where_identifier_node->next_where_identifier;
     }
 
-
-
-    // FILTER
+    append_token_instruction(&ib, OP_FILTER, NULL, NULL);
 
     append_token_instruction(&ib, OP_PROJECT, chart_identifier_node.x_axis_token, chart_identifier_node.y_axis_token);
 
