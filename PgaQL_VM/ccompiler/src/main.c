@@ -11,7 +11,7 @@
 int main(void) {
 
     // char input[] = "CHART season_player_box_score IN scatter_plot FOR AVG pts VS SUM fgm WHERE team_abbr = 'CLE' AND player_id = '1627745'";
-    char input[] = "CHART player_stats IN scatter_plot FOR fga VS fgm WHERE blk = '10'";
+    char input[] = "CHART player_stats IN scatter_plot FOR fga VS fgm WHERE blk = '10' AND fgm = '5'";
     // char *input = malloc(CHUNK_SIZE * sizeof(char));  // Start with an initial buffer
     // if (input == NULL) {
     //     perror("malloc failed");
@@ -53,17 +53,19 @@ int main(void) {
     // print_ast(ast);
 
     char *query_string = interpret(ast);
-    printf("%s\n", query_string);
+    // printf("%s\n", query_string);
 
     int instructions_len;
     Instruction* instructions = compile(ast, &instructions_len);
 
     printf("[\n");
     for(int i=0; i<instructions_len; i++) {
+        if (i > 0) printf(",");
         printf("{\"Op\":%d,\"Args\":[", instructions[i].Op);
-        for(int j = 0; instructions[i].Args[j] != NULL; j++) {
-            if(j > 0) printf(",");
-            printf("\"%s\"", instructions[i].Args[j]);
+        for (int j = 0; j < 2; j++) {
+            if (instructions[i].Args[j] == NULL) continue;
+            if (j > 0) printf(",");
+            printf("\"%s\"", (char *)instructions[i].Args[j]);
         }
         printf("]}");
     }

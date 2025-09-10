@@ -24,16 +24,16 @@ func Compile(query string) ([]Instruction, error) {
     var instructions []Instruction
     err = json.Unmarshal(output, &instructions)
     if err != nil {
+        log.Println("broke here")
         log.Fatal(err)
     }
 
-    log.Println("1")
     log.Println(instructions)
-    log.Println("2")
+    return instructions, nil
     // return output, nil // bytecode as raw []byte
 
     return []Instruction{
-        {Op: OP_SCAN, Args: []interface{}{"games"}},
+        {Op: OP_SCAN, Args: []interface{}{"player_stats"}},
         {Op: OP_LOAD_FIELD, Args: []interface{}{"season"}},
         {Op: OP_LOAD_CONST, Args: []interface{}{"2025"}},
         {Op: OP_EQ},
