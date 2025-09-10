@@ -11,7 +11,7 @@
 int main(void) {
 
     // char input[] = "CHART season_player_box_score IN scatter_plot FOR AVG pts VS SUM fgm WHERE team_abbr = 'CLE' AND player_id = '1627745'";
-    char input[] = "CHART player_stats IN scatter_plot FOR fga VS fgm WHERE blk = '10' AND fgm = '5'";
+    char input[] = "CHART player_stats IN scatter_plot FOR fga VS fgm WHERE fga = '10'";
     // char *input = malloc(CHUNK_SIZE * sizeof(char));  // Start with an initial buffer
     // if (input == NULL) {
     //     perror("malloc failed");
