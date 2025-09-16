@@ -51,23 +51,14 @@ void append_token_instruction(InstructionBuilder *ib, OpCode op, TOKEN *token1, 
     append_instruction(ib, (Instruction){op, {content1, content2}});
 }
 
-// void append_token_instruction(InstructionBuilder *ib, OpCode op, TOKEN *token) {
-//     char *content = token_to_cstring(token);
-//     append_instruction(ib, (Instruction){op, {content, NULL}});
-// }
-
 
 Instruction* compile(AST* ast, int* out_len) {
     InstructionBuilder ib = {NULL, 0, 8};
-
 
     CHART_IDENTIFIER_NODE chart_identifier_node = ast->chart_identifier;
     WHERE_IDENTIFIER_NODE *where_identifier_node = ast->where_identifier_list;
 
     append_token_instruction(&ib, OP_SCAN, chart_identifier_node.charted_token, NULL);
-
-    // PLACE EACH WHERE CLAUSE ON STACK AND CHECK IF EQ, ADDING ANY AND or OR
-
 
     bool first_where = true;
 
@@ -87,9 +78,7 @@ Instruction* compile(AST* ast, int* out_len) {
     }
 
     append_token_instruction(&ib, OP_FILTER, NULL, NULL);
-
     append_token_instruction(&ib, OP_PROJECT, chart_identifier_node.x_axis_token, chart_identifier_node.y_axis_token);
-
     append_instruction(&ib, (Instruction){OP_OUTPUT, {NULL, NULL}});
 
 

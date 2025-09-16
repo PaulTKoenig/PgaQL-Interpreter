@@ -24,7 +24,6 @@ func Compile(query string) ([]Instruction, error) {
     var instructions []Instruction
     err = json.Unmarshal(output, &instructions)
     if err != nil {
-        log.Println("broke here")
         log.Fatal(err)
     }
 
@@ -38,6 +37,10 @@ func Compile(query string) ([]Instruction, error) {
         {Op: OP_LOAD_CONST, Args: []interface{}{"2025"}},
         {Op: OP_EQ},
         {Op: OP_FILTER},
+
+        {Op: OP_GROUP_BY, Args: []interface{}{"player_id"}},
+        {Op: OP_AGG_AVG, Args: []interface{}{"pts", "avg_pts"}},
+
         {Op: OP_PROJECT, Args: []interface{}{"pts", "date"}},
         {Op: OP_OUTPUT},
 	}, nil

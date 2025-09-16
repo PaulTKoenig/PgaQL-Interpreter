@@ -7,6 +7,7 @@ import (
 
     "github.com/PaulTKoenig/PgaQL_Backend/compiler"
     "github.com/PaulTKoenig/PgaQL_Backend/vm"
+    "github.com/PaulTKoenig/PgaQL_Backend/execution"
 )
 
 type QueryRequest struct {
@@ -34,6 +35,9 @@ func HandleQuery(w http.ResponseWriter, r *http.Request) {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
+
+    execution.Execute(bytecode)
+
 
     results, err := vm.Execute(bytecode)
     if err != nil {

@@ -79,6 +79,12 @@ func Execute(instructions []compiler.Instruction) ([]map[string]interface{}, err
                         goto skipRow
                     }
 
+                case compiler.OP_GROUP_BY:
+                    continue
+
+                case compiler.OP_AGG_AVG:
+                    continue
+
                 case compiler.OP_PROJECT:
                     for _, arg := range instr.Args {
                         col := arg.(string)
