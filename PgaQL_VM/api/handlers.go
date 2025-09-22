@@ -6,7 +6,6 @@ import (
     "encoding/json"
 
     "github.com/PaulTKoenig/PgaQL_Backend/compiler"
-    "github.com/PaulTKoenig/PgaQL_Backend/vm"
     "github.com/PaulTKoenig/PgaQL_Backend/execution"
 )
 
@@ -36,10 +35,7 @@ func HandleQuery(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    execution.Execute(bytecode)
-
-
-    results, err := vm.Execute(bytecode)
+    results, err := execution.Execute(bytecode)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return

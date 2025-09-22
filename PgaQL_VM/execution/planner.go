@@ -59,61 +59,6 @@ func BuildOperatorTree(instructions []compiler.Instruction) (Operator, error) {
     return child, nil
 }
 
-// func buildPredicateFunc(stackOps []compiler.Instruction) func(Row) bool {
-// 	return func(row Row) bool {
-//         stack := []interface{}{}
-
-// 		for _, instr := range stackOps {
-//             switch instr.Op {
-//                 case compiler.OP_LOAD_FIELD:
-//                     col := instr.Args[0].(string)
-//                     val, exists := row[col]
-//                     if !exists {
-//                         return nil, fmt.Errorf("Field '%s' not found", col)
-//                     }
-//                     stack = append(stack, val)
-
-//                 case compiler.OP_LOAD_CONST:
-//                     val := instr.Args[0]
-//                     stack = append(stack, val)
-
-//                 case compiler.OP_EQ:
-//                     if len(stack) < 2 {
-//                         return nil, errors.New("EQ requires 2 operands")
-//                     }
-//                     b := stack[len(stack)-1]
-//                     a := stack[len(stack)-2]
-//                     stack = stack[:len(stack)-2]
-
-//                     stack = append(stack, a == b)
-
-//                 case compiler.OP_AND:
-//                     if len(stack) < 2 {
-//                         return nil, errors.New("AND requires 2 boolean operands")
-//                     }
-//                     b := stack[len(stack)-1].(bool)
-//                     a := stack[len(stack)-2].(bool)
-//                     stack = stack[:len(stack)-2]
-//                     stack = append(stack, a && b)
-
-//                 case compiler.OP_OR:
-//                     if len(stack) < 2 {
-//                         return nil, errors.New("OR requires 2 boolean operands")
-//                     }
-//                     b := stack[len(stack)-1].(bool)
-//                     a := stack[len(stack)-2].(bool)
-//                     stack = stack[:len(stack)-2]
-//                     stack = append(stack, a || b)
-
-//                 default:
-//                     return nil, errors.New("unsupported instruction: " + instr.Op.String())
-//             }   
-//         }
-
-//         return stack[0].(bool)
-// 	}
-// }
-
 func buildPredicateFunc(stackOps []compiler.Instruction) func(Row) bool {
     return func(row Row) bool {
         stack := []interface{}{}
