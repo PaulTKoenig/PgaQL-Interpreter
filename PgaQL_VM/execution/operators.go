@@ -21,7 +21,7 @@ func (s *Scan) Next() (Row, bool) {
 	return s.iter.Row(), true
 }
 
-// filter to get next row that is valid
+
 type Filter struct {
 	child Operator
 	pred func(Row) bool
@@ -40,8 +40,7 @@ func (f *Filter) Next() (Row, bool) {
 
 }
 
-// group holds a list of all rows created on first run by getting all rows and applying aggs
-// returns next row from this list
+
 type AggFunc func([]Row) interface{}
 
 type GroupBy struct {
@@ -87,6 +86,7 @@ func (g *GroupBy) Next() (Row, bool) {
 	return row, true
 }
 
+
 type Project struct {
 	child Operator
 	fields []string
@@ -103,6 +103,7 @@ func (p *Project) Next() (Row, bool) {
     }
     return out, true
 }
+
 
 func Avg(field string) AggFunc {
 	return func(rows []Row) interface{} {
